@@ -197,7 +197,7 @@ int eth_write_hwaddr(struct eth_device *dev, const char *base_name,
 	int i=0;
 	//printf("env_enetaddr = %s \n",env_enetaddr);
 	if (!eth_getenv_enetaddr_by_index(base_name, eth_number, env_enetaddr))
-	
+
 		return -1;
 
 	//printf("env_enetaddr = %s \n",env_enetaddr);
@@ -309,7 +309,7 @@ int eth_initialize(bd_t *bis)
 				puts("\nWarning: eth device name has a space!\n");
 			//printf("eth_number = %d\n",eth_number);
 			/***Modified by lk ***/
-			if (!eth_write_hwaddr(dev, "eth", eth_number))
+			if (eth_write_hwaddr(dev, "eth", eth_number))
 				puts("Warning: failed to set MAC address\n");
 
 			eth_number++;

@@ -25,7 +25,7 @@ V0.11	06/20/2001	REG_0A bit3=1, default enable BP with DA match
 		R17 = (R17 & 0xfff0) | NF
 
 v1.00			modify by simon 2001.9.5
-	                change for kernel 2.4.x
+			change for kernel 2.4.x
 
 v1.1   11/09/2001	fix force mode bug
 
@@ -37,7 +37,7 @@ v1.2   03/18/2003       Weilun Huang <weilun_huang@davicom.com.tw>:
 --------------------------------------
 
        12/15/2003       Initial port to u-boot by
-       			Sascha Hauer <saschahauer@web.de>
+			Sascha Hauer <saschahauer@web.de>
 
        06/03/2008	Remy Bohmer <linux@bohmer.net>
 			- Fixed the driver to work with DM9000A.
@@ -74,7 +74,7 @@ TODO: external MII is not functional, only internal at the moment.
 #define DM9000_DBG(fmt,args...) printf(fmt, ##args)
 #define DM9000_DMP_PACKET(func,packet,length)  \
 	do { \
-		int i; 							\
+		int i;							\
 		printf("%s: length: %d\n", func, length);		\
 		for (i = 0; i < length; i++) {				\
 			if (i % 8 == 0)					\
@@ -554,11 +554,11 @@ static void dm9000_get_enetaddr(struct eth_device *dev)
 	int i;
 	for (i = 0; i < 3; i++)
 		dm9000_read_srom_word(i, dev->enetaddr + (2 * i));
-/***Modified by lk ***/
-#else 
-	if (eth_getenv_enetaddr("ethaddr", dev->enetaddr)) {
-			printf("Please set ethaddr!\n");
-		}
+	/***Modified by lk ***/
+#else
+	if (!eth_getenv_enetaddr("ethaddr", dev->enetaddr)) {
+		printf("Please set ethaddr!\n");
+	}
 	//memcpy(dev->enetaddr, "\x08\x90\x90\x90\x90\x90", 6);
 #endif
 }
