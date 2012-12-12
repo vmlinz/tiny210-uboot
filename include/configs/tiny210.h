@@ -33,7 +33,7 @@
 #define CONFIG_SAMSUNG			1	/* SAMSUNG core*/
 #define CONFIG_S5P			1	/* S5P Family */
 #define CONFIG_S5PC110		1	/* which is in a S5PC110 SoC */
-#define CONFIG_TINY210		1
+#define CONFIG_TINY210		1	/* FriendlyArm TINY210 */
 
 #include <asm/arch/cpu.h>		/* get chip and board defs */
 
