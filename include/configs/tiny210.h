@@ -161,7 +161,7 @@
 
 /* MINI210 has 4 bank of DRAM */
 #define CONFIG_NR_DRAM_BANKS	1
-#define SDRAM_BANK_SIZE		0x20000000	/* 256256 MB */
+#define SDRAM_BANK_SIZE		0x20000000	/* 256 + 256 MB */
 #define PHYS_SDRAM_1		MEMORY_BASE_ADDRESS
 #define PHYS_SDRAM_1_SIZE	SDRAM_BANK_SIZE
 #if 0
@@ -386,7 +386,7 @@
 #define CONFIG_NET_MULTI               1
 #define CONFIG_NET_RETRY_COUNT 1
 #define CONFIG_DM9000_NO_SROM 1
-#ifdef CONFIG_DRIVER_DM9000  
+#ifdef CONFIG_DRIVER_DM9000
 #define CONFIG_DM9000_BASE		(0x88001000)
 #define DM9000_IO			(CONFIG_DM9000_BASE)
 #if defined(DM9000_16BIT_DATA)
@@ -397,7 +397,6 @@
 #endif
 /****************************/
 
-
 /***Modified by lk ***/
 #define CFG_PHY_UBOOT_BASE	MEMORY_BASE_ADDRESS + 0x3e00000
 #define CFG_PHY_KERNEL_BASE	MEMORY_BASE_ADDRESS + 0x8000
@@ -405,9 +404,10 @@
 /***Modified by lk ***/
 #define CONFIG_ETHADDR		00:40:5c:26:0a:5b
 #define CONFIG_NETMASK          255.255.255.0
-#define CONFIG_IPADDR		192.168.186.13
-#define CONFIG_SERVERIP		192.168.186.13
+#define CONFIG_IPADDR		192.168.0.2
+#define CONFIG_SERVERIP		192.168.0.1
 #define CONFIG_GATEWAYIP	192.168.0.1
+
 /*   For nand driver   */
 #define CONFIG_CMD_NAND
 #if defined(CONFIG_CMD_NAND)
@@ -417,6 +417,7 @@
 #define CONFIG_SYS_NAND_BASE           (0xB0E000000)
 #define NAND_MAX_CHIPS          1
 #define CONFIG_MTD_DEVICE  /* needed for mtdparts commands add by lkmcu */
+#define CONFIG_MTD_PARTITIONS
 #define NAND_DISABLE_CE()	(NFCONT_REG |= (1 << 1))
 #define NAND_ENABLE_CE()	(NFCONT_REG &= ~(1 << 1))
 #define NF_TRANSRnB()		do { while(!(NFSTAT_REG & (1 << 0))); } while(0)
@@ -431,22 +432,21 @@
 #define CONFIG_IDENT_STRING     " for TINY210"
 #define CONFIG_DOS_PARTITION            1
 
-/*NAND_BOOT & MMCSD_BOOT  by lk  */
+/* NAND_BOOT & MMCSD_BOOT by lk  */
 #define CONFIG_S5PC11X
 #define CONFIG_ENV_IS_IN_NAND            1
 #define CONFIG_ENV_SIZE         0x4000  /* 16KB */
-#define RESERVE_BLOCK_SIZE              (2048)
-#define BL1_SIZE                        (8 << 10) /*8 K reserved for BL1*/
-/***************  EDIT BY WEI  ****************/
-#define CONFIG_ENV_OFFSET      0x80000 /* 0x40000 */
-/***************  END OF EDIT  ****************/
+#define RESERVE_BLOCK_SIZE      (2048)
+#define BL1_SIZE                (8 << 10) /*8 K reserved for BL1*/
+#define CONFIG_ENV_OFFSET       0xC0000 /* 0x40000 */
+
 #define CFG_NAND_HWECC
-/* 此处没有任何作用
-#define CONFIG_NAND_BL1_8BIT_ECC
-#define CONFIG_8BIT_HW_ECC_SLC
-#define CONFIG_NAND_4BIT_ECC
-#define CONFIG_NAND_YAFFS_WRITE	1
-   在此注释以免混乱 */
+/* #define CONFIG_NAND_BL1_8BIT_ECC
+ * #define CONFIG_8BIT_HW_ECC_SLC
+ * #define CONFIG_NAND_4BIT_ECC
+ * #define CONFIG_NAND_YAFFS_WRITE	1
+ */
+
 /**************  ADD BY WEI  ***************/
 
 /* #define DEBUG_WEI */
@@ -456,50 +456,70 @@
 #else
 	#define printwei(args...)
 #endif
-/* #define CAUGHT_SIGNAL_8   //启动arch/arm/lib/eabi_compat.c中收到信号8后打印信息功能 */
-#define CONFIG_BOARD_NAME ZZRD-S5PV210
+
+/* arch/arm/lib/eabi_compat.c recieve signal 8 to print message */
+/* #define CAUGHT_SIGNAL_8 */
+
+#define CONFIG_BOARD_NAME Tiny210
 #define CONFIG_S3C_USBD
 #define USBD_DOWN_ADDR 0x30000000
-/*#define CONFIG_VIDEO*/
-/*#define CONFIG_CFB_CONSOLE*/
-/*#define CONFIG_VIDEO_LOGO 1*/
 
-/************  Fastboot  ************/
+/* #define CONFIG_VIDEO */
+/* #define CONFIG_CFB_CONSOLE */
+/* #define CONFIG_VIDEO_LOGO 1 */
+
+/* Fastboot */
 #define CONFIG_FASTBOOT 1
 
 /* Fastboot variables */
-#define CFG_FASTBOOT_TRANSFER_BUFFER		(0x30000000)
-#define CFG_FASTBOOT_TRANSFER_BUFFER_SIZE	(0x8000000)   /* 128MB */
+#if defined(CONFIG_QT210)
 #define CFG_FASTBOOT_ADDR_KERNEL		(0xC0008000)
 #define CFG_FASTBOOT_ADDR_RAMDISK		(0x30A00000)
-#define CFG_FASTBOOT_PAGESIZE			(2048)	// Page size of booting device
-#define CFG_FASTBOOT_SDMMC_BLOCKSIZE		(512)	// Block size of sdmmc
+#define CFG_FASTBOOT_TRANSFER_BUFFER		(0x30000000)
+#elif defined(CONFIG_TINY210)
+#define CFG_FASTBOOT_ADDR_KERNEL		(0x30000000)
+#define CFG_FASTBOOT_ADDR_RAMDISK		(0x30A00000)
+#define CFG_FASTBOOT_TRANSFER_BUFFER		(0xC0008000)
+#else
+#endif
+#define CFG_FASTBOOT_TRANSFER_BUFFER_SIZE	(0x8000000) /* 128MB */
+#define CFG_FASTBOOT_PAGESIZE			(2048) /* Page size */
+#define CFG_FASTBOOT_SDMMC_BLOCKSIZE		(512) /* Block size of sdmmc */
 
 /* Just one BSP type should be defined. */
-/* #define CFG_FASTBOOT_ONENANDBSP */
 #define CFG_FASTBOOT_NANDBSP
-
 #if defined(CONFIG_QT210)
-	#define CONFIG_BOOTARGS		"console=ttySAC0,115200 mem=512M"
-	#define CONFIG_BOOTCOMMAND	"nand read C0008000 600000 460000; nand read 30A00000 B00000 180000; bootm C0008000 30A00000"
+#define CONFIG_BOOTARGS	"console=ttySAC0,115200 mem=512M"
+#define CONFIG_BOOTCOMMAND "nand read C0008000 600000 460000; nand read 30A00000 B00000 180000; bootm C0008000 30A00000"
 #elif defined(CONFIG_TINY210)
-	#define CONFIG_BOOTARGS 	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
-	#define CONFIG_BOOTCOMMAND	"nand read 30000000 600000 460000; bootm 30000000"
+#define CONFIG_BOOTARGS	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
+#define CONFIG_BOOTCOMMAND "nand read 30000000 600000 460000; bootm 30000000"
 #else
 #endif
 
 /* #define CFG_FASTBOOT_SDMMCBSP */
-/************  Fastboot  *************/
-
 #if defined(CONFIG_QT210)
-	#define CONFIG_BOOTARGS		"console=ttySAC0,115200 mem=512M"
-	#define CONFIG_BOOTCOMMAND	"nand read C0008000 600000 460000; nand read 30A00000 B00000 180000; bootm C0008000 30A00000"
+#define CONFIG_BOOTARGS	"console=ttySAC0,115200 mem=512M"
+#define CONFIG_BOOTCOMMAND "nand read C0008000 600000 460000; nand read 30A00000 B00000 180000; bootm C0008000 30A00000"
 #elif defined(CONFIG_TINY210)
-	#define CONFIG_BOOTARGS 	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
-	#define CONFIG_BOOTCOMMAND	"nand read 30000000 600000 460000; bootm 30000000"
+#define CONFIG_BOOTARGS	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
+#define CONFIG_BOOTCOMMAND "nand read 30000000 600000 460000; bootm 30000000"
 #else
 #endif
 
 /**************  END OF ADD  ***************/
+
+/* MTD default configuration */
+#define MTDIDS_DEFAULT		"nand0=s3c-nand"
+#define MTDPARTS_DEFAULT	"mtdparts=s3c-nand"\
+				":768k(bootloader)"\
+				",5m@0x100000(recovery)"\
+				",5m@0x600000(kernel)"\
+				",3m@0xB00000(ramdisk)"\
+				",128m@0xE00000(system)"\
+				",64m@0x8E00000(cache)"\
+				",-(userdata)"
+
+#define NORMAL_MTDPARTS_DEFAULT MTDPARTS_DEFAULT
 
 #endif	/* __CONFIG_H */
