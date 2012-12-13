@@ -159,27 +159,13 @@
 
 #define CONFIG_SYS_INIT_SP_ADDR (CONFIG_SYS_LOAD_ADDR - GENERATED_GBL_DATA_SIZE)
 
-/* MINI210 has 4 bank of DRAM */
-#define CONFIG_NR_DRAM_BANKS	1
+/* Tiny210 has only 1 bank of DRAM */
+#define CONFIG_NR_DRAM_BANKS 1
 #define SDRAM_BANK_SIZE		0x20000000	/* 256 + 256 MB */
 #define PHYS_SDRAM_1		MEMORY_BASE_ADDRESS
 #define PHYS_SDRAM_1_SIZE	SDRAM_BANK_SIZE
-#if 0
-#define PHYS_SDRAM_2		(MEMORY_BASE_ADDRESS + 0x20000000) /* SDRAM Bank #2 */
-#define PHYS_SDRAM_2_SIZE	SDRAM_BANK_SIZE
-#endif
 
-#if 0
-//#define CONFIG_CLK_667_166_166_133
-//#define CONFIG_CLK_533_133_100_100
-//#define CONFIG_CLK_800_200_166_133
-//#define CONFIG_CLK_800_100_166_133
-#endif
 #define CONFIG_CLK_1000_200_166_133
-#if 0
-//#define CONFIG_CLK_400_200_166_133
-//#define CONFIG_CLK_400_100_166_133
-#endif
 
 #if defined(CONFIG_CLK_667_166_166_133)
 #define APLL_MDIV       0xfa
@@ -438,7 +424,7 @@
 #define CONFIG_ENV_SIZE         0x4000  /* 16KB */
 #define RESERVE_BLOCK_SIZE      (2048)
 #define BL1_SIZE                (8 << 10) /*8 K reserved for BL1*/
-#define CONFIG_ENV_OFFSET       0xC0000 /* 0x40000 */
+#define CONFIG_ENV_OFFSET       0xC0000 /* Bootloader has 768K */
 
 #define CFG_NAND_HWECC
 /* #define CONFIG_NAND_BL1_8BIT_ECC
@@ -446,8 +432,6 @@
  * #define CONFIG_NAND_4BIT_ECC
  * #define CONFIG_NAND_YAFFS_WRITE	1
  */
-
-/**************  ADD BY WEI  ***************/
 
 /* #define DEBUG_WEI */
 
@@ -457,57 +441,31 @@
 	#define printwei(args...)
 #endif
 
-/* arch/arm/lib/eabi_compat.c recieve signal 8 to print message */
 /* #define CAUGHT_SIGNAL_8 */
 
 #define CONFIG_BOARD_NAME Tiny210
 #define CONFIG_S3C_USBD
 #define USBD_DOWN_ADDR 0x30000000
 
-/* #define CONFIG_VIDEO */
-/* #define CONFIG_CFB_CONSOLE */
-/* #define CONFIG_VIDEO_LOGO 1 */
-
 /* Fastboot */
 #define CONFIG_FASTBOOT 1
 
 /* Fastboot variables */
-#if defined(CONFIG_QT210)
-#define CFG_FASTBOOT_ADDR_KERNEL		(0xC0008000)
-#define CFG_FASTBOOT_ADDR_RAMDISK		(0x30A00000)
+#define CFG_FASTBOOT_ADDR_KERNEL		(0x20008000)
+#define CFG_FASTBOOT_ADDR_RAMDISK		(0x20A00000)
 #define CFG_FASTBOOT_TRANSFER_BUFFER		(0x30000000)
-#elif defined(CONFIG_TINY210)
-#define CFG_FASTBOOT_ADDR_KERNEL		(0x30000000)
-#define CFG_FASTBOOT_ADDR_RAMDISK		(0x30A00000)
-#define CFG_FASTBOOT_TRANSFER_BUFFER		(0xC0008000)
-#else
-#endif
 #define CFG_FASTBOOT_TRANSFER_BUFFER_SIZE	(0x8000000) /* 128MB */
 #define CFG_FASTBOOT_PAGESIZE			(2048) /* Page size */
 #define CFG_FASTBOOT_SDMMC_BLOCKSIZE		(512) /* Block size of sdmmc */
 
-/* Just one BSP type should be defined. */
+/* Nand */
 #define CFG_FASTBOOT_NANDBSP
-#if defined(CONFIG_QT210)
-#define CONFIG_BOOTARGS	"console=ttySAC0,115200 mem=512M"
-#define CONFIG_BOOTCOMMAND "nand read C0008000 600000 460000; nand read 30A00000 B00000 180000; bootm C0008000 30A00000"
-#elif defined(CONFIG_TINY210)
 #define CONFIG_BOOTARGS	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
-#define CONFIG_BOOTCOMMAND "nand read 30000000 600000 460000; bootm 30000000"
-#else
-#endif
+#define CONFIG_BOOTCOMMAND "nand read 20008000 600000 460000; bootm 20008000"
 
-/* #define CFG_FASTBOOT_SDMMCBSP */
-#if defined(CONFIG_QT210)
-#define CONFIG_BOOTARGS	"console=ttySAC0,115200 mem=512M"
-#define CONFIG_BOOTCOMMAND "nand read C0008000 600000 460000; nand read 30A00000 B00000 180000; bootm C0008000 30A00000"
-#elif defined(CONFIG_TINY210)
-#define CONFIG_BOOTARGS	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
-#define CONFIG_BOOTCOMMAND "nand read 30000000 600000 460000; bootm 30000000"
-#else
-#endif
-
-/**************  END OF ADD  ***************/
+/* #define CFG_FASTBOOT_SDMMCBSP
+ * #define CONFIG_BOOTARGS	"root=/dev/mtdblock4 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200 mem=512M"
+ * #define CONFIG_BOOTCOMMAND "nand read 20008000 600000 460000; bootm 20008000" */
 
 /* MTD default configuration */
 #define MTDIDS_DEFAULT		"nand0=s3c-nand"
