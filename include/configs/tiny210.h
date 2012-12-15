@@ -372,6 +372,7 @@
 #define CONFIG_NET_MULTI               1
 #define CONFIG_NET_RETRY_COUNT 1
 #define CONFIG_DM9000_NO_SROM 1
+#define CONFIG_DM9000_BUGGY_PHY 1
 #ifdef CONFIG_DRIVER_DM9000
 #define CONFIG_DM9000_BASE		(0x88001000)
 #define DM9000_IO			(CONFIG_DM9000_BASE)
@@ -381,20 +382,19 @@
 #define DM9000_DATA			(CONFIG_DM9000_BASE+1)
 #endif
 #endif
-/****************************/
 
-/***Modified by lk ***/
+/* Modified by lk */
 #define CFG_PHY_UBOOT_BASE	MEMORY_BASE_ADDRESS + 0x3e00000
 #define CFG_PHY_KERNEL_BASE	MEMORY_BASE_ADDRESS + 0x8000
 
-/***Modified by lk ***/
+/* Modified by lk */
 #define CONFIG_ETHADDR		00:40:5c:26:0a:5b
 #define CONFIG_NETMASK          255.255.255.0
 #define CONFIG_IPADDR		192.168.0.2
-#define CONFIG_SERVERIP		192.168.0.1
+#define CONFIG_SERVERIP		192.168.0.22
 #define CONFIG_GATEWAYIP	192.168.0.1
 
-/*   For nand driver   */
+/* For nand driver */
 #define CONFIG_CMD_NAND
 #if defined(CONFIG_CMD_NAND)
 #define CONFIG_CMD_NAND_YAFFS
