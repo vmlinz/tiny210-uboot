@@ -173,10 +173,8 @@ COBJS-$(CONFIG_LYNXKDI) += lynxkdi.o
 COBJS-$(CONFIG_MODEM_SUPPORT) += modem.o
 COBJS-$(CONFIG_UPDATE_TFTP) += update.o
 COBJS-$(CONFIG_USB_KEYBOARD) += usb_kbd.o
-##########  ADD BY WEI  ##########
 COBJS-$(CONFIG_S3C_USBD) += cmd_usbd.o
-COBJS-y += cmd_fastboot.o
-##########  END OF ADD  ##########
+COBJS-$(CONFIG_FASTBOOT) += cmd_fastboot.o
 endif
 
 COBJS-y += console.o
