@@ -64,8 +64,8 @@ static void nand_init_chip(struct mtd_info *mtd, struct nand_chip *nand,
 			 * Add MTD device so that we can reference it later
 			 * via the mtdcore infrastructure (e.g. ubi).
 			 */
-#if CONFIG_NAND_NO_USE_CHIP_NAME			
-   			sprintf(dev_name[i], "nand%d", i);
+#if CONFIG_NAND_NO_USE_CHIP_NAME
+			sprintf(dev_name[i], "nand%d", i);
 			mtd->name = dev_name[i++];
 #endif
 			add_mtd_device(mtd);

@@ -400,6 +400,7 @@
 #define NAND_MAX_CHIPS          1
 #define CONFIG_MTD_DEVICE  /* needed for mtdparts commands add by lkmcu */
 #define CONFIG_MTD_PARTITIONS
+#define CONFIG_NAND_NO_USE_CHIP_NAME 1 /* nand(id) to identify nand devices */
 #define NAND_DISABLE_CE()	(NFCONT_REG |= (1 << 1))
 #define NAND_ENABLE_CE()	(NFCONT_REG &= ~(1 << 1))
 #define NF_TRANSRnB()		do { while(!(NFSTAT_REG & (1 << 0))); } while(0)
